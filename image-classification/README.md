@@ -1,20 +1,23 @@
+## Train a model for food classification
+### Results: [nateraw/food](https://huggingface.co/nateraw/food)
+
+### Command:
 ```
-python run_image_classification.py \
-    --output_dir beans-vit/ \
+python -i run_image_classification.py \
+    --output_dir food101_outputs/ \
     --model_name_or_path google/vit-base-patch16-224-in21k \
-    --dataset_name nateraw/beans \
+    --dataset_name nateraw/food101 \
     --do_train \
     --do_eval \
-    --do_predict \
     --learning_rate 2e-4 \
-    --per_device_train_batch_size 32 \
-    --per_device_eval_batch_size 32 \
+    --per_device_train_batch_size 64 \
+    --per_device_eval_batch_size 64 \
     --fp16 True \
     --remove_unused_columns False \
     --overwrite_output_dir True \
     --dataloader_num_workers 8 \
     --metric_for_best_model accuracy \
-    --num_train_epochs 4 \
+    --num_train_epochs 5 \
     --evaluation_strategy epoch \
     --logging_strategy steps --logging_steps 20 \
     --save_strategy epoch \
@@ -22,3 +25,4 @@ python run_image_classification.py \
     --save_total_limit 3 \
     --seed 1337
 ```
+
