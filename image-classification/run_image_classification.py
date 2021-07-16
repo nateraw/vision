@@ -27,7 +27,7 @@ from utils import ImageClassificationCollator, image_loader
 logger = logging.getLogger(__name__)
 
 # Will error if the minimal version of Transformers is not installed. Remove at your own risks.
-# check_min_version("4.9.0.dev0")
+check_min_version("4.9.0.dev0")
 
 require_version("datasets>=1.8.0", "To fix: pip install -r examples/pytorch/text-classification/requirements.txt")
 
@@ -187,6 +187,7 @@ def main():
         task='image-classification'
     ).with_transform(image_loader)
 
+    data_args.train_val_split = None if 'validation' in ds.keys() else data_args.train_val_split
     if isinstance(data_args.train_val_split, float) and data_args.train_val_split > 0.0:
         split = ds["train"].train_test_split(0.15)
         ds['train'] = split['train']
@@ -242,7 +243,7 @@ def main():
         if data_args.max_eval_samples is not None:
             ds['validation'] = ds['validation'].shuffle(seed=training_args.seed).select(range(data_args.max_eval_samples))
 
-    if training_args.do_predict or data_args.task_name is not None or data_args.test_file is not None:
+    if training_args.do_predict:
         if "test" not in ds:
             raise ValueError("--do_predict requires a test dataset")
         if data_args.max_predict_samples is not None:
@@ -282,7 +283,7 @@ def main():
         output_predict_file = os.path.join(training_args.output_dir, 'predict_results.txt')
         if trainer.is_world_process_zero():
             with open(output_predict_file, "w") as writer:
-                logger.info(f"***** Predict results *****")
+                logger.info(f"***** Writing predict results *****")
                 writer.write("index\tfile\tprediction\n")
                 for i, prediction in enumerate(predictions):
                     file = ds['test'][i]['image_file_path'].split('/')[-1]

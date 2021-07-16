@@ -91,14 +91,14 @@ class ExamplesTests(TestCasePlus):
             --dataset_name nateraw/beans
             --do_train
             --do_eval
-            --learning_rate 2e-4
+            --learning_rate 2e-5
             --per_device_train_batch_size 2
             --per_device_eval_batch_size 1
             --remove_unused_columns False
             --overwrite_output_dir True
             --dataloader_num_workers 16
             --metric_for_best_model accuracy
-            --max_steps 20
+            --max_steps 30
             --seed 7
         """.split()
 
@@ -108,4 +108,4 @@ class ExamplesTests(TestCasePlus):
         with patch.object(sys, "argv", testargs):
             run_image_classification.main()
             result = get_results(tmp_dir)
-            self.assertGreaterEqual(result["eval_accuracy"], 0.75)
+            self.assertGreaterEqual(result["eval_accuracy"], 0.7)
